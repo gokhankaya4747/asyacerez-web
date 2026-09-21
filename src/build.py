@@ -378,7 +378,7 @@ def page_home(lang):
     </div>
     <div class="hero__seal hero__anim" style="--d:.6s" aria-hidden="true">
       <svg viewBox="0 0 200 200" class="hero__ring"><defs><path id="circ" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
-      <text><textPath href="#circ">{'PREMIUM KALİTE · MENŞEİNDEN SEÇİLMİŞ · İHRACATA HAZIR · ' if tr else 'PREMIUM QUALITY · SOURCED AT ORIGIN · EXPORT READY · '}</textPath></text></svg>
+      <text><textPath href="#circ" textLength="486" lengthAdjust="spacingAndGlyphs">{'TOPTAN İTHALAT · İHRACAT · PREMIUM KALİTE · ' if tr else 'WHOLESALE IMPORT · EXPORT · PREMIUM QUALITY · '}</textPath></text></svg>
       <img src="/assets/brand/logo-badge.svg" alt="" width="120" height="120">
     </div>
   </div>

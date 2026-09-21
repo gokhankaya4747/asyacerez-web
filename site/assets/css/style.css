@@ -126,7 +126,7 @@ body.menu-open .is-transparent .burger span{background:var(--brown)}
 .hero__seal{position:relative;width:230px;height:230px;flex:none;display:grid;place-items:center}
 .hero__seal img{width:120px;height:120px;filter:drop-shadow(0 10px 30px rgba(0,0,0,.4))}
 .hero__ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 40s linear infinite}
-.hero__ring text{font-family:var(--sans);font-size:11.2px;letter-spacing:.32em;fill:var(--gold-300);font-weight:500}
+.hero__ring text{font-family:var(--sans);font-size:11px;letter-spacing:.2em;fill:var(--gold-300);font-weight:500}
 @keyframes spin{to{transform:rotate(360deg)}}
 .hero__stats{position:relative;border-top:1px solid var(--line-light);background:rgba(28,15,6,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr)}
