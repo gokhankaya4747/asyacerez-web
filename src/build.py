@@ -15,13 +15,13 @@ CO = {
     "brand": "Asya Çerez",
     "street": "Mimar Kemalettin Mah. Şair Haşmet Sk. Yüksel İş Merkezi No:27/501",
     "district": "Fatih", "city": "İstanbul", "country": {"tr": "Türkiye", "en": "Türkiye"},
-    "email": "info@asyacerez.com",
+    "email": "asyacerezcilik@gmail.com",
     # Boş bırakılan alanlar sitede gösterilmez:
     "phone": "",          # örn. "+90 212 000 00 00"
     "whatsapp": "",       # örn. "905320000000" (başında + olmadan)
     "instagram": "",      # örn. "https://instagram.com/asyacerez"
     "linkedin": "",
-    "form_endpoint": "",  # örn. "https://formsubmit.co/ajax/info@asyacerez.com" — boşsa e-posta istemcisi açılır
+    "form_endpoint": "https://formsubmit.co/ajax/asyacerezcilik@gmail.com",  # örn. "https://formsubmit.co/ajax/info@asyacerez.com" — boşsa e-posta istemcisi açılır
 }
 ADDRESS_ONE_LINE = f'{CO["street"]}, {CO["district"]} / {CO["city"]}'
 MAPS_Q = "Yüksel İş Merkezi, Şair Haşmet Sk. No:27, Mimar Kemalettin, Fatih, İstanbul"
@@ -52,7 +52,7 @@ T = {
   "nav_about": "Hakkımızda", "nav_contact": "İletişim", "cta_quote": "Teklif Al", "menu": "Menü",
   "all_products": "Tüm Ürünler", "detail": "Ürünü İncele", "request_quote": "Teklif İste",
   "tagline": "Kuruyemiş & Kuru Meyve · Dış Ticaret",
-  "footer_about": "İstanbul merkezli Asya Çerez; ceviz, badem, fındık, Antep fıstığı, kaju, çekirdek ve kuru meyvede güvenilir tedarik, ithalat ve ihracat çözümleri sunar.",
+  "footer_about": "İstanbul merkezli Asya Çerez; ceviz, badem, fındık, Antep fıstığı, kaju, çekirdek ve kuru meyvede toptan ithalat ve ihracat yapan bir dış ticaret şirketidir.",
   "footer_links": "Kurumsal", "footer_products": "Ürünler", "footer_contact": "İletişim",
   "rights": "Tüm hakları saklıdır.", "skip": "İçeriğe geç",
   "email": "E-posta", "phone": "Telefon", "address": "Adres", "whatsapp": "WhatsApp",
@@ -62,7 +62,7 @@ T = {
   "nav_about": "About Us", "nav_contact": "Contact", "cta_quote": "Get a Quote", "menu": "Menu",
   "all_products": "All Products", "detail": "View Product", "request_quote": "Request a Quote",
   "tagline": "Nuts & Dried Fruits · Foreign Trade",
-  "footer_about": "Istanbul-based Asya Çerez provides reliable sourcing, import and export of walnuts, almonds, hazelnuts, pistachios, cashews, seeds and dried fruits.",
+  "footer_about": "Istanbul-based Asya Çerez is a trading company engaged in the wholesale import and export of walnuts, almonds, hazelnuts, pistachios, cashews, seeds and dried fruits.",
   "footer_links": "Company", "footer_products": "Products", "footer_contact": "Contact",
   "rights": "All rights reserved.", "skip": "Skip to content",
   "email": "Email", "phone": "Phone", "address": "Address", "whatsapp": "WhatsApp",
@@ -327,8 +327,8 @@ def page_home(lang):
                  "Sourced at origin", "We select from the best harvests of each growing region and from trusted producers."),
         ("flask", "Parti bazlı analiz", "Nem, aflatoksin, yabancı madde ve duyusal kontroller her partide uygulanır; talep halinde laboratuvar raporu.",
                   "Lot-by-lot testing", "Moisture, aflatoxin, foreign matter and sensory checks on every lot, with lab reports on request."),
-        ("box", "Esnek ambalaj", "Vakumlu karton, çuval ve perakende ambalaj; kendi markanızla private label üretim.",
-                "Flexible packaging", "Vacuum cartons, bags and retail packs — including private-label production."),
+        ("box", "Toptan ambalaj & yükleme", "Vakumlu karton, çuval ve big bag; paletli, parsiyel veya tam konteyner sevkiyat.",
+                "Bulk packing & loading", "Vacuum cartons, bags and big bags; palletised, LCL or full-container shipments."),
         ("ship", "Uçtan uca lojistik", "Konteyner planlama, gümrük ve ihracat evrakları; EXW'dan DAP'a tüm teslim şekilleri.",
                  "End-to-end logistics", "Container planning, customs and export documents — every term from EXW to DAP."),
         ("scale", "Şeffaf fiyatlandırma", "Piyasa koşullarına dayalı, net şartnameli ve sürprizsiz teklifler.",
@@ -348,8 +348,8 @@ def page_home(lang):
     ]
     steps_html = "".join(f"""<li class="step reveal"><span class="step__num">{i+1:02d}</span><h3>{a if tr else c}</h3><p>{b if tr else d}</p></li>"""
                          for i, (a, b, c, d) in enumerate(steps))
-    stats = [(str(len(PRODUCTS)), "ürün grubu", "product groups"), ("3", "kategori", "categories"),
-             ("6", "Incoterms teslim şekli", "Incoterms options"), ("2", "dilde hizmet", "languages served")]
+    stats = [(str(len(PRODUCTS)), "ürün grubu", "product groups"), ("2", "yönlü ticaret: ithalat & ihracat", "way trade: import & export"),
+             ("6", "Incoterms teslim şekli", "Incoterms options"), ("B2B", "yalnızca toptan satış", "wholesale only")]
     stats_html = "".join(f'<div class="stat"><span class="stat__num">{n}</span><span class="stat__label">{a if tr else b}</span></div>' for n, a, b in stats)
 
     markets = (["Avrupa Birliği", "Körfez Ülkeleri", "Orta Doğu", "Kuzey Afrika", "Orta Asya & Kafkasya", "Balkanlar", "Rusya & BDT"] if tr
@@ -368,9 +368,9 @@ def page_home(lang):
   <div class="hero__shade"></div>
   <div class="container hero__inner">
     <div class="hero__content">
-      <p class="eyebrow eyebrow--light hero__anim" style="--d:.05s"><span lang="en">Dried Fruits &amp; Nuts</span> · İstanbul</p>
+      <p class="eyebrow eyebrow--light hero__anim" style="--d:.05s">{'Toptan İthalat &amp; İhracat · İstanbul' if tr else 'Wholesale Import &amp; Export · Istanbul'}</p>
       <h1 class="hero__title hero__anim" style="--d:.15s">{'Doğanın en seçkin <em>kuruyemişleri</em>, dünyanın dört bir yanına.' if tr else "Nature's finest <em>nuts</em> &amp; dried fruits, delivered worldwide."}</h1>
-      <p class="hero__lead hero__anim" style="--d:.3s">{"Ceviz, badem, fındık, Antep fıstığı, kaju ve kuru meyvede; menşeinden seçilmiş, analizli ve ihracata hazır ürünlerle güvenilir dış ticaret ortağınız." if tr else "Your reliable trade partner for walnuts, almonds, hazelnuts, pistachios, cashews and dried fruits — selected at origin, lab-tested and export-ready."}</p>
+      <p class="hero__lead hero__anim" style="--d:.3s">{"Ceviz, badem, fındık, Antep fıstığı, kaju, çekirdek ve kuru meyvede toptan ithalat ve ihracat. Menşeinden seçilmiş, analizli ürünleri ton bazında, konteyner yüklemeli olarak tedarik ediyoruz." if tr else "Wholesale import and export of walnuts, almonds, hazelnuts, pistachios, cashews, seeds and dried fruits — selected at origin, lab-tested and supplied by the tonne in full container loads."}</p>
       <div class="btn-row hero__anim" style="--d:.45s">
         <a class="btn btn--gold" href="{url('products', lang)}">{'Ürünleri İncele' if tr else 'Explore Products'} {icon('arrow', 18)}</a>
         <a class="btn btn--ghost-light" href="{url('contact', lang)}">{t['request_quote']}</a>
@@ -400,7 +400,7 @@ def page_home(lang):
       <p>{"Asya Çerez Dış Ticaret Ltd. Şti., İstanbul'un tarihi ticaret merkezi Fatih'te kurulmuş bir kuruyemiş ve kuru meyve dış ticaret şirketidir. Türkiye'nin dünyaca ünlü fındık, Antep fıstığı, kayısı, incir ve üzümünü uluslararası pazarlara ulaştırırken; kaju, badem, ceviz ve hurma gibi ürünleri de dünyanın önde gelen üretim bölgelerinden Türkiye'ye getiriyoruz." if tr else "Asya Çerez Foreign Trade Ltd. is a nuts and dried fruits trading company based in Fatih, Istanbul's historic trading quarter. We bring Türkiye's world-famous hazelnuts, pistachios, apricots, figs and raisins to international markets, while importing cashews, almonds, walnuts and dates from the world's leading growing regions."}</p>
       <ul class="checks">
         <li>{icon('check', 18)} {'İthalat, ihracat ve toptan tedarik tek çatı altında' if tr else 'Import, export and wholesale supply under one roof'}</li>
-        <li>{icon('check', 18)} {'Alıcı şartnamesine göre kalibre, işleme ve ambalaj' if tr else 'Grade, processing and packing to your specification'}</li>
+        <li>{icon('check', 18)} {'Ton bazında; palet, parsiyel ve konteyner yüklemeli satış' if tr else 'Sold by the tonne — palletised, LCL or full container'}</li>
         <li>{icon('check', 18)} {'Her partide analiz ve izlenebilirlik' if tr else 'Testing and traceability on every lot'}</li>
       </ul>
       <a class="link-arrow" href="{url('about', lang)}">{'Hikâyemizi okuyun' if tr else 'Read our story'} {icon('arrow', 18)}</a>
@@ -450,9 +450,9 @@ def page_home(lang):
 <section class="section section--cream">
   <div class="container split split--rev">
     <div class="split__text reveal">
-      <p class="eyebrow">{'Ambalaj & <span lang="en">Private Label</span>' if tr else 'Packaging & Private Label'}</p>
-      <h2>{'Pazarınıza uygun ambalaj, markanıza özel üretim' if tr else 'Packaging for your market, production for your brand'}</h2>
-      <p>{'Sanayi alıcıları için vakumlu karton ve çuval; zincir marketler ve distribütörler için ise kendi markanızla perakende ambalaj üretiyoruz. Etiket dili, gramaj ve baskı tasarımı hedef ülke mevzuatına göre hazırlanır.' if tr else 'Vacuum cartons and bags for industrial buyers; retail packs under your own brand for retailers and distributors. Label language, weights and artwork are prepared to destination-country regulations.'}</p>
+      <p class="eyebrow">{'Toptan Ambalaj & Yükleme' if tr else 'Bulk Packing & Loading'}</p>
+      <h2>{'İhracata uygun ambalaj, güvenli yükleme' if tr else 'Export-grade packing, secure loading'}</h2>
+      <p>{'Ürünlerimizi yalnızca toptan olarak; vakumlu karton, çuval ve big bag ambalajlarda sunuyoruz. Paletleme, konteyner istifleme ve yükleme, ürünün tazeliğini ve güvenliğini koruyacak şekilde planlanır; koli etiketleri hedef ülke mevzuatına göre hazırlanır.' if tr else 'We sell wholesale only, in vacuum cartons, bags and big bags. Palletising, container stowage and loading are planned to protect freshness and safety, and carton labels follow destination-country regulations.'}</p>
       <ul class="pack-list">{''.join(f'<li>{icon("box", 20)}<span>{x}</span></li>' for x in PACKAGING[lang])}</ul>
     </div>
     <div class="split__media reveal">
@@ -491,7 +491,7 @@ def page_products(lang):
                 url("products", lang), alt)
     body += header(lang, "products", alt)
     body += page_hero(lang, ("Ürün Kataloğu" if tr else "Product Catalogue"), (t["nav_products"]),
-                      ("Menşeinden seçilmiş, kalibre ve kaliteye göre sınıflandırılmış ürünlerimizi inceleyin." if tr else "Browse our products — selected at origin, graded by size and quality."),
+                      ("Toptan ithalat ve ihracatını yaptığımız; menşeinden seçilmiş, kalibre ve kaliteye göre sınıflandırılmış ürünlerimiz." if tr else "The products we import and export wholesale — selected at origin, graded by size and quality."),
                       "hero-mix.webp", [(t["nav_home"], url("home", lang)), (t["nav_products"], None)])
     chips = f'<button class="fchip is-on" data-filter="all">{"Tümü" if tr else "All"} <span>{len(PRODUCTS)}</span></button>'
     for ck, cv in CATEGORIES.items():
@@ -535,6 +535,7 @@ def page_product(p, lang):
         ("Nem" if tr else "Moisture", S["moisture"][lang]),
         ("Raf ömrü" if tr else "Shelf life", S["shelf"][lang]),
         ("GTİP / HS Kodu" if tr else "HS Code", S["hs"]),
+        ("Satış şekli" if tr else "Sales terms", "Yalnızca toptan · palet, parsiyel veya konteyner (20’ / 40’)" if tr else "Wholesale only · pallet, LCL or container (20’ / 40’)"),
     ]
     specs = "".join(f"<tr><th>{a}</th><td>{e(b)}</td></tr>" for a, b in spec_rows)
     details = "".join(f"<li>{icon('check', 18)}<span>{e(x)}</span></li>" for x in p["details"][lang])
@@ -571,7 +572,7 @@ def page_product(p, lang):
         {"@type": "ListItem", "position": 1, "name": t["nav_home"], "item": DOMAIN + url("home", lang)},
         {"@type": "ListItem", "position": 2, "name": t["nav_products"], "item": DOMAIN + url("products", lang)},
         {"@type": "ListItem", "position": 3, "name": name, "item": DOMAIN + product_url(p, lang)}]}
-    title = (f"{name} — Toptan Tedarik ve İhracat" if tr else f"{name} — Wholesale Supply & Export")
+    title = (f"Toptan {name} — İthalat ve İhracat" if tr else f"Wholesale {name} — Import & Export")
     body = head(lang, title, p["intro"][lang][:155].rsplit(" ", 1)[0] + "…", product_url(p, lang), alt,
                 og_img=f"/assets/img/products/{imgs[0]}.webp", jsonld=[ld, bc])
     body += header(lang, "products", alt)
@@ -603,7 +604,7 @@ def page_product(p, lang):
           <a class="btn btn--gold" href="{url('contact', lang)}?urun={p['slug']}">{t['request_quote']} {icon('arrow', 18)}</a>
           {wa_btn}
         </div>
-        <p class="pd__note">{icon('shield', 18)} {'Numune gönderimi ve analiz raporu talep üzerine sağlanır.' if tr else 'Samples and lab analysis reports available on request.'}</p>
+        <p class="pd__note">{icon('shield', 18)} {'Yalnızca toptan satış · numune ve analiz raporu talep üzerine sağlanır.' if tr else 'Wholesale only · samples and lab reports available on request.'}</p>
       </div>
     </div>
   </div>
@@ -647,10 +648,10 @@ def page_trade(lang):
                  "Export", "We deliver Türkiye's hazelnuts, pistachios, dried apricots, figs, raisins and leblebi to world markets."),
         ("globe", "İthalat", "Kaju, badem, ceviz ve hurmayı dünyanın önde gelen üretim bölgelerinden Türkiye pazarına getiriyoruz.",
                   "Import", "We bring cashews, almonds, walnuts and dates from the world's leading growing regions into Türkiye."),
-        ("truck", "Toptan Tedarik", "Kuruyemişçiler, zincir marketler, gıda üreticileri ve HORECA sektörü için düzenli ve planlı tedarik.",
-                  "Wholesale Supply", "Planned, regular supply for nut retailers, supermarket chains, food manufacturers and HORECA."),
-        ("tag", "Private Label", "Kendi markanızla, hedef ülke mevzuatına uygun etiket ve ambalajla perakende ürün üretimi.",
-                "Private Label", "Retail products under your brand, with labelling and packaging to destination-country rules."),
+        ("truck", "Toptan Tedarik", "Kuruyemiş toptancıları, distribütörler, paketleme firmaları ve gıda sanayicileri için ton bazında düzenli tedarik.",
+                  "Wholesale Supply", "Regular supply by the tonne for nut wholesalers, distributors, packers and food manufacturers."),
+        ("search", "Kaynak Bulma", "Aradığınız ürünü, kalibreyi ve menşei üretici ağımızdan bulur; fiyat ve kalite karşılaştırmasıyla sunarız.",
+                "Sourcing", "We find the product, grade and origin you need through our producer network and present price and quality options."),
         ("doc", "Gümrük & Evrak", "İhracat ve ithalat evraklarının hazırlanması, gümrük müşavirliği koordinasyonu.",
                 "Customs & Documents", "Preparation of export/import documents and coordination with customs brokers."),
         ("box", "Numune Hizmeti", "Sipariş öncesi ürün numunesi ve analiz raporu gönderimi.",
@@ -671,8 +672,8 @@ def page_trade(lang):
     pay = (["Peşin / avans ödeme (T/T)", "Akreditif (L/C)", "Vesaik mukabili (CAD)", "Kısmi avans + bakiye yükleme sonrası"] if tr else
            ["Advance payment (T/T)", "Letter of Credit (L/C)", "Cash Against Documents (CAD)", "Partial advance + balance after loading"])
     body = head(lang, "Dış Ticaret Hizmetleri — İthalat, İhracat, Toptan" if tr else "Foreign Trade Services — Import, Export, Wholesale",
-                ("Asya Çerez'in kuruyemiş ve kuru meyvede ihracat, ithalat, toptan tedarik, private label, gümrük ve lojistik hizmetleri; Incoterms teslim şekilleri ve ihracat evrakları." if tr else
-                 "Asya Çerez export, import, wholesale, private label, customs and logistics services for nuts and dried fruits — Incoterms and export documents."),
+                ("Asya Çerez'in kuruyemiş ve kuru meyvede ihracat, ithalat, toptan tedarik, kaynak bulma, gümrük ve lojistik hizmetleri; Incoterms teslim şekilleri ve ihracat evrakları." if tr else
+                 "Asya Çerez export, import, wholesale, sourcing, customs and logistics services for nuts and dried fruits — Incoterms and export documents."),
                 url("trade", lang), alt, og_img="/assets/img/ship.webp")
     body += header(lang, "trade", alt)
     body += page_hero(lang, ("Hizmetlerimiz" if tr else "Our Services"), t["nav_trade"],
@@ -851,7 +852,7 @@ def page_contact(lang):
     </div>
     <form class="qform reveal" id="quote-form" data-endpoint="{CO['form_endpoint']}" data-email="{CO['email']}" data-lang="{lang}" novalidate>
       <h2>{L('Teklif & Numune Talebi','Quotation & Sample Request')}</h2>
-      <p class="muted">{L('Yıldızlı alanlar zorunludur.','Fields marked * are required.')}</p>
+      <p class="muted">{L('Satışlarımız yalnızca toptandır. Yıldızlı alanlar zorunludur.','We sell wholesale only. Fields marked * are required.')}</p>
       <div class="frow">
         <label>{L('Ad Soyad','Full name')} *<input name="name" required autocomplete="name"></label>
         <label>{L('Firma','Company')}<input name="company" autocomplete="organization"></label>
@@ -864,7 +865,7 @@ def page_contact(lang):
         <label>{L('Ülke','Country')}<input name="country" autocomplete="country-name"></label>
         <label>{L('Talep türü','Request type')}<select name="type">
           <option>{L('Fiyat teklifi','Price quotation')}</option><option>{L('Numune talebi','Sample request')}</option>
-          <option>{L('Private label üretim','Private label')}</option><option>{L('Tedarikçi / iş birliği','Supplier / partnership')}</option><option>{L('Diğer','Other')}</option></select></label>
+          <option>{L('İthalat talebi','Import enquiry')}</option><option>{L('İhracat talebi','Export enquiry')}</option><option>{L('Tedarikçi / iş birliği','Supplier / partnership')}</option><option>{L('Diğer','Other')}</option></select></label>
       </div>
       <div class="frow">
         <label>{L('Ürün','Product')}<select name="product"><option value="">{L('Seçiniz','Select')}</option>{opts}<option value="diger">{L('Diğer','Other')}</option></select></label>

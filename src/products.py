@@ -10,9 +10,9 @@ CATEGORIES = {
 # Ortak ambalaj seçenekleri
 PACKAGING = {
     "tr": ["10 kg vakumlu karton koli", "12,5 / 25 kg karton koli (PE iç torbalı)",
-           "25 / 50 kg PP veya jüt çuval", "Perakende: 100 g – 1 kg doypack / kavanoz (private label)"],
+           "25 / 50 kg PP veya jüt çuval", "Big bag (500 – 1.000 kg) · paletli ve konteyner yükleme"],
     "en": ["10 kg vacuum-packed carton", "12.5 / 25 kg carton with PE liner",
-           "25 / 50 kg PP or jute bag", "Retail: 100 g – 1 kg doypack / jar (private label)"],
+           "25 / 50 kg PP or jute bag", "Big bag (500 – 1,000 kg) · palletised and container loading"],
 }
 
 PRODUCTS = [
@@ -185,8 +185,8 @@ PRODUCTS = [
     "latin": None,
     "tagline": {"tr": "Size özel oranlarla lüks ve ekonomik karışımlar", "en": "Premium and value blends mixed to your ratios"},
     "intro": {
-      "tr": "Perakende rafları, oteller, havayolu ikramları ve hediye paketleri için; ceviz, badem, fındık, kaju, Antep fıstığı ve kuru meyvelerden oluşan karışımları istediğiniz oranda hazırlıyoruz. Kendi markanızla (private label) ambalajlama da mümkündür.",
-      "en": "For retail shelves, hotels, airline catering and gift packs, we blend walnuts, almonds, hazelnuts, cashews, pistachios and dried fruits to the ratio you specify — with private-label packing available."},
+      "tr": "Kuruyemiş toptancıları, distribütörler, paketleme firmaları ve gıda üreticileri için; ceviz, badem, fındık, kaju, Antep fıstığı ve kuru meyvelerden oluşan karışımları istediğiniz oranda, ton bazında hazırlıyoruz.",
+      "en": "For nut wholesalers, distributors, packers and food manufacturers, we blend walnuts, almonds, hazelnuts, cashews, pistachios and dried fruits to the ratio you specify, supplied by the tonne."},
     "details": {
       "tr": ["Lüks karışık: kaju, badem, fındık, Antep fıstığı ağırlıklı.",
              "Çiğ (raw) karışım, kavrulmuş tuzlu karışım ve kuru meyveli (trail mix) seçenekler.",
@@ -212,8 +212,8 @@ PRODUCTS = [
     "latin": "Helianthus annuus",
     "tagline": {"tr": "Çerezlik çizgili çekirdek ve iç ay çekirdeği", "en": "Striped confectionery seeds and hulled kernels"},
     "intro": {
-      "tr": "Türkiye'nin en sevilen çerezi olan ay çekirdeğinde, kabuğu kolay açılan, iri ve dolgun çerezlik çeşitlere odaklanıyoruz. Kavrulmuş tuzlu, tuzsuz ve iç ay çekirdeğini hem perakende hem de sanayi (ekmek, müsli, bar) için tedarik ediyoruz.",
-      "en": "Türkiye's favourite snack. We focus on large, plump confectionery varieties that crack easily, supplying roasted salted, unsalted and hulled kernels for both retail and industry (bread, muesli, bars)."},
+      "tr": "Türkiye'nin en sevilen çerezi olan ay çekirdeğinde, kabuğu kolay açılan, iri ve dolgun çerezlik çeşitlere odaklanıyoruz. Kavrulmuş tuzlu, tuzsuz ve iç ay çekirdeğini toptan kuruyemiş sektörü ve sanayi (ekmek, müsli, bar) için ton bazında tedarik ediyoruz.",
+      "en": "Türkiye's favourite snack. We focus on large, plump confectionery varieties that crack easily, supplying roasted salted, unsalted and hulled kernels by the tonne for the nut trade and industry (bread, muesli, bars)."},
     "details": {
       "tr": ["Siyah-beyaz çizgili çerezlik tipler (Trakya ve ithal çeşitler).",
              "Kalibre, 50 gramdaki tane sayısıyla belirlenir; iri taneler premium segmente yönlendirilir.",
@@ -272,11 +272,11 @@ PRODUCTS = [
       "tr": ["Sarı leblebi (kabuklu, çifte kavrulmuş), beyaz leblebi ve tuzlu / baharatlı çeşitler.",
              "Şekerli leblebi ve leblebi unu seçenekleri.",
              "Glütensiz, bitkisel protein ve lif kaynağı.",
-             "Perakende ambalajda kendi markanızla (private label) üretim."],
+             "İhracata uygun vakumlu karton ve çuval ambalajda toptan sevkiyat."],
       "en": ["Yellow leblebi (in-skin, double-roasted), white leblebi and salted / spiced varieties.",
              "Sugar-coated leblebi and leblebi flour.",
              "Gluten-free source of plant protein and fibre.",
-             "Private-label production in retail packaging."]},
+             "Wholesale shipment in export-grade vacuum cartons and bags."]},
     "specs": {
       "origin":  {"tr": "Türkiye (Çorum)", "en": "Türkiye (Çorum)"},
       "forms":   {"tr": "Sarı, beyaz, çifte kavrulmuş, tuzlu, şekerli, un", "en": "Yellow, white, double-roasted, salted, sugar-coated, flour"},
@@ -352,11 +352,11 @@ PRODUCTS = [
     "details": {
       "tr": ["Sultana Type 7, 8, 9, 10 ve Standart renk tipleri.",
              "Siyah kuru üzüm ve Thompson çekirdeksiz seçenekleri.",
-             "Hem perakende hem de unlu mamul ve kahvaltılık gevrek sanayii için.",
+             "Kuruyemiş toptancıları, unlu mamul ve kahvaltılık gevrek sanayii için.",
              "Taş, sap ve yabancı madde ayıklaması lazerli ve optik makinelerle yapılır."],
       "en": ["Sultana Type 7, 8, 9, 10 and Standard colour types.",
              "Black raisins and Thompson seedless options.",
-             "For retail as well as bakery and breakfast-cereal industries.",
+             "For nut wholesalers and the bakery and breakfast-cereal industries.",
              "Stones, stems and foreign matter removed by laser and optical sorters."]},
     "specs": {
       "origin":  {"tr": "Türkiye (Manisa, İzmir, Denizli)", "en": "Türkiye (Manisa, İzmir, Denizli)"},
@@ -374,8 +374,8 @@ PRODUCTS = [
     "latin": "Phoenix dactylifera",
     "tagline": {"tr": "Medjool, Deglet Nour, Mabroom, Ajwa ve Mazafati", "en": "Medjool, Deglet Nour, Mabroom, Ajwa and Mazafati"},
     "intro": {
-      "tr": "Doğal şekeri, lifi ve mineral içeriğiyle hurma; özellikle Ramazan döneminde yüksek talep gören, yıl boyu satılan bir üründür. Körfez ülkeleri, Kuzey Afrika ve İran'ın en seçkin hurma çeşitlerini ithal ederek toptan ve perakende kanallara ulaştırıyoruz.",
-      "en": "Naturally sweet and rich in fibre and minerals, dates sell year-round with peak demand during Ramadan. We import the finest varieties from the Gulf, North Africa and Iran for wholesale and retail channels."},
+      "tr": "Doğal şekeri, lifi ve mineral içeriğiyle hurma; özellikle Ramazan döneminde yüksek talep gören, yıl boyu satılan bir üründür. Körfez ülkeleri, Kuzey Afrika ve İran'ın en seçkin hurma çeşitlerini ithal ederek toptancılara ve distribütörlere ulaştırıyoruz.",
+      "en": "Naturally sweet and rich in fibre and minerals, dates sell year-round with peak demand during Ramadan. We import the finest varieties from the Gulf, North Africa and Iran for wholesalers and distributors."},
     "details": {
       "tr": ["Medjool: iri, yumuşak, karamel aromalı premium hurma.",
              "Deglet Nour (Tunus / Cezayir): yarı kuru, altın renkli, dallı veya dalsız.",
