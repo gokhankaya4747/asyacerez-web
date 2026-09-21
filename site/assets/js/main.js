@@ -80,10 +80,22 @@
   // Teklif formu
   const form = $('#quote-form');
   if (form) {
-    const tr = form.dataset.lang === 'tr';
-    const status = $('.qform__status', form);
+    const lang = form.dataset.lang;
+    const M = {
+      tr: { req: 'Lütfen zorunlu alanları kontrol edin.', sending: 'Gönderiliyor…', ok: 'Teşekkürler! Talebiniz bize ulaştı, en kısa sürede dönüş yapacağız.',
+            fail: 'Şu an gönderilemedi. Aşağıdaki düğmeyle e-posta olarak iletebilirsiniz.', mail: 'E-posta ile gönder', subj: 'Teklif Talebi',
+            L: ['Ad Soyad', 'Firma', 'E-posta', 'Telefon', 'Ülke', 'Talep', 'Ürün', 'Miktar'] },
+      en: { req: 'Please check the required fields.', sending: 'Sending…', ok: 'Thank you! We received your request and will reply shortly.',
+            fail: 'Could not send right now. Use the button below to send it by email.', mail: 'Send by email', subj: 'Quote Request',
+            L: ['Name', 'Company', 'Email', 'Phone', 'Country', 'Request', 'Product', 'Quantity'] },
+      ar: { req: 'يرجى التحقق من الحقول الإلزامية.', sending: 'جارٍ الإرسال…', ok: 'شكرًا لكم! وصلنا طلبكم وسنرد عليكم في أقرب وقت.',
+            fail: 'تعذّر الإرسال حاليًا. يمكنكم إرسال الطلب بالبريد الإلكتروني عبر الزر أدناه.', mail: 'إرسال بالبريد الإلكتروني', subj: 'طلب عرض سعر',
+            L: ['الاسم', 'الشركة', 'البريد الإلكتروني', 'الهاتف', 'الدولة', 'نوع الطلب', 'المنتج', 'الكمية'] },
+    }[lang] || {};
+    const status = $('.qform__status', form), btn = $('button[type=submit]', form), btnHTML = btn.innerHTML;
     const p = new URLSearchParams(location.search).get('urun');
     if (p && form.product.querySelector(`option[value="${CSS.escape(p)}"]`)) form.product.value = p;
+    const setStatus = (cls, html) => { status.className = 'qform__status ' + cls; status.innerHTML = html; };
     form.addEventListener('submit', async e => {
       e.preventDefault();
       let ok = true;
@@ -91,31 +103,28 @@
         const bad = f.type === 'checkbox' ? !f.checked : !f.value.trim() || (f.type === 'email' && !/^\S+@\S+\.\S+$/.test(f.value));
         f.classList.toggle('is-invalid', bad); if (bad) ok = false;
       });
-      if (!ok) { status.className = 'qform__status is-err'; status.textContent = tr ? 'Lütfen zorunlu alanları kontrol edin.' : 'Please check the required fields.'; return; }
+      if (!ok) return setStatus('is-err', M.req);
       const d = Object.fromEntries(new FormData(form));
-      const prod = form.product.selectedOptions[0]?.text || '';
-      const lines = [
-        `${tr ? 'Ad Soyad' : 'Name'}: ${d.name}`, `${tr ? 'Firma' : 'Company'}: ${d.company || '-'}`, `E-mail: ${d.email}`,
-        `${tr ? 'Telefon' : 'Phone'}: ${d.phone || '-'}`, `${tr ? 'Ülke' : 'Country'}: ${d.country || '-'}`,
-        `${tr ? 'Talep' : 'Request'}: ${d.type}`, `${tr ? 'Ürün' : 'Product'}: ${d.product ? prod : '-'}`,
-        `${tr ? 'Miktar' : 'Quantity'}: ${d.qty || '-'}`, '', d.message];
-      const subject = `${tr ? 'Teklif Talebi' : 'Quote Request'} — ${d.product ? prod : d.type} — ${d.company || d.name}`;
+      const prod = d.product ? form.product.selectedOptions[0].text : '-';
+      const vals = [d.name, d.company, d.email, d.phone, d.country, d.type, prod, d.qty];
+      const body = M.L.map((l, i) => `${l}: ${vals[i] || '-'}`).join('\n') + '\n\n' + d.message;
+      const subject = `${M.subj} — ${d.product ? prod : d.type} — ${d.company || d.name}`;
+      const mailto = `mailto:${form.dataset.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       const ep = form.dataset.endpoint;
-      if (ep) {
-        const btn = $('button[type=submit]', form); btn.disabled = true;
-        try {
-          const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ ...d, product: prod, _subject: subject, _replyto: d.email, _template: 'table' }) });
-          if (!r.ok) throw 0;
-          form.reset(); status.className = 'qform__status is-ok';
-          status.textContent = tr ? 'Teşekkürler! Talebiniz bize ulaştı, en kısa sürede dönüş yapacağız.' : 'Thank you! We received your request and will reply shortly.';
-        } catch { status.className = 'qform__status is-err'; status.textContent = tr ? `Gönderilemedi. Lütfen ${form.dataset.email} adresine yazın.` : `Could not send. Please email ${form.dataset.email}.`; }
-        btn.disabled = false;
-      } else {
-        location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
-        status.className = 'qform__status is-ok';
-        status.textContent = tr ? 'E-posta uygulamanız açılıyor; mesajı göndererek talebinizi iletebilirsiniz.' : 'Your email app is opening — send the message to submit your request.';
-      }
+      if (!ep) { location.href = mailto; return; }
+      btn.disabled = true; btn.innerHTML = `<span class="spinner" aria-hidden="true"></span> ${M.sending}`;
+      setStatus('', '');
+      const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 15000);
+      try {
+        const payload = { ...d, product: prod, subject, _subject: subject, from_name: 'asyacerez.com', replyto: d.email, _replyto: d.email, _template: 'table', _captcha: 'false' };
+        if (form.dataset.key) payload.access_key = form.dataset.key;
+        const r = await fetch(ep, { method: 'POST', signal: ctrl.signal, headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || j.success === false || j.success === 'false') throw 0;
+        form.reset(); setStatus('is-ok', M.ok);
+      } catch {
+        setStatus('is-err', `${M.fail}<br><a class="btn btn--outline btn--sm qform__mail" href="${mailto}">${M.mail}</a>`);
+      } finally { clearTimeout(timer); btn.disabled = false; btn.innerHTML = btnHTML; }
     });
     form.addEventListener('input', e => e.target.classList.remove('is-invalid'));
   }

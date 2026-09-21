@@ -2,6 +2,20 @@
 """asyacerez.com statik site üreticisi.  Çalıştır:  python3 src/build.py"""
 import os, json, html, shutil, datetime
 from products import PRODUCTS, CATEGORIES, PACKAGING
+from i18n_ar import AR_UI, AR_PRODUCTS, AR_T, arabize
+
+LANGS = ("tr", "en", "ar")
+LANG_NAMES = {"tr": "Türkçe", "en": "English", "ar": "العربية"}
+PAGE_KEY = "home"  # main() her sayfadan önce ayarlar (hreflang + dil seçici için)
+
+# Arapça ürün alanlarını birleştir
+for _p in PRODUCTS:
+    _a = AR_PRODUCTS.get(_p["slug"], {})
+    for _k in ("name", "tagline", "intro", "details"):
+        if _k in _a: _p[_k]["ar"] = _a[_k]
+    for _k, _v in _a.get("specs", {}).items(): _p["specs"][_k]["ar"] = _v
+for _k, _v in AR_UI["categories"].items(): CATEGORIES[_k]["ar"] = _v
+PACKAGING["ar"] = AR_UI["packaging"]
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "site")
@@ -14,29 +28,30 @@ CO = {
     "legal": "ASYA ÇEREZ DIŞ TİCARET LİMİTED ŞİRKETİ",
     "brand": "Asya Çerez",
     "street": "Mimar Kemalettin Mah. Şair Haşmet Sk. Yüksel İş Merkezi No:27/501",
-    "district": "Fatih", "city": "İstanbul", "country": {"tr": "Türkiye", "en": "Türkiye"},
+    "district": "Fatih", "city": "İstanbul", "country": {"tr": "Türkiye", "en": "Türkiye", "ar": "تركيا"},
     "email": "asyacerezcilik@gmail.com",
     # Boş bırakılan alanlar sitede gösterilmez:
     "phone": "",          # örn. "+90 212 000 00 00"
     "whatsapp": "",       # örn. "905320000000" (başında + olmadan)
     "instagram": "",      # örn. "https://instagram.com/asyacerez"
     "linkedin": "",
-    "form_endpoint": "https://formsubmit.co/ajax/asyacerezcilik@gmail.com",  # örn. "https://formsubmit.co/ajax/info@asyacerez.com" — boşsa e-posta istemcisi açılır
+    "form_endpoint": "https://formsubmit.co/ajax/asyacerezcilik@gmail.com",
+    "form_key": "",       # Web3Forms access key girilirse form Web3Forms'a gider (hızlı)  # örn. "https://formsubmit.co/ajax/info@asyacerez.com" — boşsa e-posta istemcisi açılır
 }
 ADDRESS_ONE_LINE = f'{CO["street"]}, {CO["district"]} / {CO["city"]}'
 MAPS_Q = "Yüksel İş Merkezi, Şair Haşmet Sk. No:27, Mimar Kemalettin, Fatih, İstanbul"
 
 # ---------------------------------------------------------------- rotalar
 ROUTES = {
-    "home":     {"tr": "/",             "en": "/en/"},
-    "products": {"tr": "/urunler/",     "en": "/en/products/"},
-    "trade":    {"tr": "/dis-ticaret/", "en": "/en/trade/"},
-    "quality":  {"tr": "/kalite/",      "en": "/en/quality/"},
-    "about":    {"tr": "/hakkimizda/",  "en": "/en/about/"},
-    "contact":  {"tr": "/iletisim/",    "en": "/en/contact/"},
+    "home":     {"tr": "/",             "en": "/en/",          "ar": "/ar/"},
+    "products": {"tr": "/urunler/",     "en": "/en/products/", "ar": "/ar/products/"},
+    "trade":    {"tr": "/dis-ticaret/", "en": "/en/trade/",    "ar": "/ar/trade/"},
+    "quality":  {"tr": "/kalite/",      "en": "/en/quality/",  "ar": "/ar/quality/"},
+    "about":    {"tr": "/hakkimizda/",  "en": "/en/about/",    "ar": "/ar/about/"},
+    "contact":  {"tr": "/iletisim/",    "en": "/en/contact/",  "ar": "/ar/contact/"},
 }
 def product_url(p, lang):
-    return f"/urunler/{p['slug']}/" if lang == "tr" else f"/en/products/{p['slug_en']}/"
+    return f"/urunler/{p['slug']}/" if lang == "tr" else f"/{lang}/products/{p['slug_en']}/"
 def url(key, lang):
     if key.startswith("product:"):
         p = next(x for x in PRODUCTS if x["slug"] == key.split(":", 1)[1])
@@ -69,6 +84,8 @@ T = {
  },
 }
 
+T["ar"] = AR_T
+
 # ---------------------------------------------------------------- ikonlar (inline SVG, stroke)
 def icon(name, size=24):
     P = {
@@ -98,15 +115,22 @@ def icon(name, size=24):
      "ig": '<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>',
      "in": '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>',
     }
-    return (f'<svg class="ico" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    return (f'<svg class="ico ico--{name}" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
             f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{P[name]}</svg>')
 
 # ---------------------------------------------------------------- iskelet
+def lang_list(lang):
+    out = ""
+    for l in LANGS:
+        cls = "is-on" if l == lang else ""
+        out += f'<a href="{url(PAGE_KEY, l)}" lang="{l}" hreflang="{l}" class="{cls}">{LANG_NAMES[l]}</a>'
+    return out
+
 def head(lang, title, desc, path, alt_path, og_img="/assets/img/hero.webp", jsonld=None, noindex=False):
     full_title = title if "Asya Çerez" in title else f"{title} | Asya Çerez"
     ld = "".join(f'<script type="application/ld+json">{json.dumps(j, ensure_ascii=False)}</script>' for j in (jsonld or []))
     return f"""<!doctype html>
-<html lang="{lang}">
+<html lang="{lang}" dir="{'rtl' if lang == 'ar' else 'ltr'}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -114,16 +138,15 @@ def head(lang, title, desc, path, alt_path, og_img="/assets/img/hero.webp", json
 <meta name="description" content="{e(desc)}">
 {'<meta name="robots" content="noindex">' if noindex else ''}
 <link rel="canonical" href="{DOMAIN}{path}">
-<link rel="alternate" hreflang="tr" href="{DOMAIN}{path if lang=='tr' else alt_path}">
-<link rel="alternate" hreflang="en" href="{DOMAIN}{path if lang=='en' else alt_path}">
-<link rel="alternate" hreflang="x-default" href="{DOMAIN}{path if lang=='tr' else alt_path}">
+{''.join(f'<link rel="alternate" hreflang="{l}" href="{DOMAIN}{url(PAGE_KEY, l)}">' for l in LANGS)}
+<link rel="alternate" hreflang="x-default" href="{DOMAIN}{url(PAGE_KEY, 'tr')}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Asya Çerez">
 <meta property="og:title" content="{e(full_title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{DOMAIN}{path}">
 <meta property="og:image" content="{DOMAIN}{og_img}">
-<meta property="og:locale" content="{'tr_TR' if lang=='tr' else 'en_US'}">
+<meta property="og:locale" content="{ {'tr':'tr_TR','en':'en_US','ar':'ar_AR'}[lang] }">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#3A2314">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png">
@@ -131,7 +154,7 @@ def head(lang, title, desc, path, alt_path, og_img="/assets/img/hero.webp", json
 <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@300;400;500;600{'&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700' if lang == 'ar' else ''}&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css?v={ASSET_V}">
 {ld}
 </head>
@@ -140,7 +163,7 @@ def head(lang, title, desc, path, alt_path, og_img="/assets/img/hero.webp", json
 def brand_block(lang):
     return f"""<a class="brand" href="{url('home', lang)}" aria-label="Asya Çerez">
   <img class="brand__badge" src="/assets/brand/logo-badge.svg" alt="" width="46" height="46">
-  <span class="brand__text"><span class="brand__name">ASYA ÇEREZ</span><span class="brand__sub">{'DIŞ TİCARET' if lang=='tr' else 'FOREIGN TRADE'}</span></span>
+  <span class="brand__text"><span class="brand__name">ASYA ÇEREZ</span><span class="brand__sub">{ {'tr':'DIŞ TİCARET','en':'FOREIGN TRADE','ar':'للتجارة الخارجية'}[lang] }</span></span>
 </a>"""
 
 def header(lang, active, alt_path, transparent=False):
@@ -161,8 +184,11 @@ def header(lang, active, alt_path, transparent=False):
         </a>
       </div></div>"""
     pcls = ' class="is-active"' if active == "products" else ""
-    lang_links = (f'<a href="{alt_path}" hreflang="en" lang="en">EN</a>' if lang == "tr"
-                  else f'<a href="{alt_path}" hreflang="tr" lang="tr">TR</a>')
+    def lang_sw(extra=""):
+        items = "".join(
+            (f'<span aria-current="true" lang="{l}" title="{LANG_NAMES[l]}">{l.upper()}</span>' if l == lang else
+             f'<a href="{url(PAGE_KEY, l)}" hreflang="{l}" lang="{l}" title="{LANG_NAMES[l]}">{l.upper()}</a>') for l in LANGS)
+        return f'<div class="lang{extra}" role="navigation" aria-label="Language">{icon("globe", 16)}{items}</div>' 
     return f"""<body class="{'has-hero' if transparent else ''}">
 <a class="skip" href="#main">{t['skip']}</a>
 <header class="site-header{' is-transparent' if transparent else ''}" id="top">
@@ -179,7 +205,7 @@ def header(lang, active, alt_path, transparent=False):
       </ul>
     </nav>
     <div class="site-header__actions">
-      <div class="lang"><span aria-current="true">{lang.upper()}</span>{lang_links}</div>
+      {lang_sw()}
       <a class="btn btn--gold btn--sm hide-sm" href="{url('contact', lang)}">{t['cta_quote']}</a>
       <button class="burger" aria-label="{t['menu']}" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button>
     </div>
@@ -197,7 +223,7 @@ def header(lang, active, alt_path, transparent=False):
   </nav>
   <div class="drawer__foot">
     <a class="btn btn--gold" href="{url('contact', lang)}">{t['cta_quote']}</a>
-    <div class="lang"><span aria-current="true">{lang.upper()}</span>{lang_links}</div>
+    <div class="drawer__langs">{lang_list(lang)}</div>
   </div>
 </div>
 <main id="main">
@@ -241,7 +267,7 @@ def footer(lang):
   </div>
   <div class="container footer__bottom">
     <p>© {YEAR} {CO['legal']}. {t['rights']}</p>
-    <p class="footer__origin"><span lang="en">Dried Fruits &amp; Nuts</span> · İstanbul</p>
+    <div class="footer__langs">{icon("globe", 16)}{lang_list(lang)}</div>
   </div>
 </footer>
 {wa_float}
@@ -264,7 +290,7 @@ def page_hero(lang, eyebrow, title, lead, img, crumbs):
 
 def product_card(p, lang, extra_cls=""):
     t = T[lang]
-    return f"""<article class="pcard reveal {extra_cls}" data-cat="{p['cat']}" data-name="{e(p['name']['tr'].lower() + ' ' + p['name']['en'].lower())}">
+    return f"""<article class="pcard reveal {extra_cls}" data-cat="{p['cat']}" data-name="{e(p['name']['tr'].lower() + ' ' + p['name']['en'].lower() + ' ' + p['name'].get('ar', ''))}">
   <a href="{product_url(p, lang)}" class="pcard__link">
     <div class="pcard__media"><img src="/assets/img/products/{p['img']}-1-sm.webp" alt="{e(p['name'][lang])}" loading="lazy" width="640" height="640"></div>
     <div class="pcard__body">
@@ -318,7 +344,7 @@ def page_home(lang):
         n = sum(1 for p in PRODUCTS if p["cat"] == ck)
         cats += f"""<a class="cat reveal" href="{url('products', lang)}#{ck}">
           <img src="/assets/img/products/{cat_imgs[ck]}.webp" alt="" loading="lazy">
-          <span class="cat__body"><span class="cat__count">{n} {'ürün' if tr else 'products'}</span>
+          <span class="cat__body"><span class="cat__count">{n} { {'tr':'ürün','en':'products','ar':'منتجات'}[lang] }</span>
           <span class="cat__name">{cv[lang]}</span><span class="cat__desc">{cat_desc[ck][0 if tr else 1]}</span>
           <span class="cat__go">{icon('arrow', 20)}</span></span></a>"""
 
@@ -572,7 +598,7 @@ def page_product(p, lang):
         {"@type": "ListItem", "position": 1, "name": t["nav_home"], "item": DOMAIN + url("home", lang)},
         {"@type": "ListItem", "position": 2, "name": t["nav_products"], "item": DOMAIN + url("products", lang)},
         {"@type": "ListItem", "position": 3, "name": name, "item": DOMAIN + product_url(p, lang)}]}
-    title = (f"Toptan {name} — İthalat ve İhracat" if tr else f"Wholesale {name} — Import & Export")
+    title = {"tr": f"Toptan {name} — İthalat ve İhracat", "en": f"Wholesale {name} — Import & Export", "ar": f"{name} بالجملة — استيراد وتصدير"}[lang]
     body = head(lang, title, p["intro"][lang][:155].rsplit(" ", 1)[0] + "…", product_url(p, lang), alt,
                 og_img=f"/assets/img/products/{imgs[0]}.webp", jsonld=[ld, bc])
     body += header(lang, "products", alt)
@@ -624,7 +650,7 @@ def page_product(p, lang):
     {nut}
     <div class="panel" id="tab-pack" role="tabpanel" hidden>
       <div class="two-col"><div><h3>{'Ambalaj seçenekleri' if tr else 'Packaging options'}</h3><ul class="pack-list">{pack}</ul></div>
-      <div><h3>{'Depolama koşulları' if tr else 'Storage conditions'}</h3><ul class="checks">{''.join(f'<li>{icon("thermo", 18)}<span>{x}</span></li>' for x in storage)}</ul></div></div>
+      <div><h3>{'Depolama koşulları' if tr else 'Storage conditions'}</h3><ul class="checks">{''.join(f'<li>{icon("thermo", 18)}<span>{e(x)}</span></li>' for x in storage)}</ul></div></div>
     </div>
   </div>
 </section>
@@ -850,7 +876,7 @@ def page_contact(lang):
       <div class="map"><iframe title="{L('Harita','Map')}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
         src="https://maps.google.com/maps?q={html.escape(MAPS_Q).replace(' ', '+')}&z=16&output=embed&hl={lang}"></iframe></div>
     </div>
-    <form class="qform reveal" id="quote-form" data-endpoint="{CO['form_endpoint']}" data-email="{CO['email']}" data-lang="{lang}" novalidate>
+    <form class="qform reveal" id="quote-form" data-endpoint="{'https://api.web3forms.com/submit' if CO['form_key'] else CO['form_endpoint']}" data-key="{CO['form_key']}" data-email="{CO['email']}" data-lang="{lang}" novalidate>
       <h2>{L('Teklif & Numune Talebi','Quotation & Sample Request')}</h2>
       <p class="muted">{L('Satışlarımız yalnızca toptandır. Yıldızlı alanlar zorunludur.','We sell wholesale only. Fields marked * are required.')}</p>
       <div class="frow">
@@ -900,15 +926,20 @@ def write(path, content):
     with open(fp, "w", encoding="utf-8") as f: f.write(content)
 
 def main():
-    for d in ["urunler", "en", "dis-ticaret", "kalite", "hakkimizda", "iletisim"]:
+    global PAGE_KEY
+    for d in ["urunler", "en", "ar", "dis-ticaret", "kalite", "hakkimizda", "iletisim"]:
         shutil.rmtree(os.path.join(OUT, d), ignore_errors=True)
     urls = []
-    for lang in ("tr", "en"):
+    post = lambda lang, h: arabize(h) if lang == "ar" else h
+    for lang in LANGS:
         pages = {"home": page_home, "products": page_products, "trade": page_trade, "quality": page_quality, "about": page_about, "contact": page_contact}
         for k, fn in pages.items():
-            write(url(k, lang), fn(lang)); urls.append(url(k, lang))
+            PAGE_KEY = k
+            write(url(k, lang), post(lang, fn(lang))); urls.append(url(k, lang))
         for p in PRODUCTS:
-            write(product_url(p, lang), page_product(p, lang)); urls.append(product_url(p, lang))
+            PAGE_KEY = "product:" + p["slug"]
+            write(product_url(p, lang), post(lang, page_product(p, lang))); urls.append(product_url(p, lang))
+    PAGE_KEY = "home"
     write("/404.html", page_404())
     today = datetime.date.today().isoformat()
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
