@@ -36,7 +36,7 @@ CO = {
     "instagram": "",      # örn. "https://instagram.com/asyacerez"
     "linkedin": "",
     "form_endpoint": "https://formsubmit.co/ajax/asyacerezcilik@gmail.com",
-    "form_key": "819e3807-3470-4080-8aee-fc5dccdc4303",       # Web3Forms access key girilirse form Web3Forms'a gider (hızlı)  # örn. "https://formsubmit.co/ajax/info@asyacerez.com" — boşsa e-posta istemcisi açılır
+    "form_key": "819e3807-3470-4080-8aee-fc5dccdc4303",  # Web3Forms access key (doluysa form Web3Forms'a gider)
 }
 ADDRESS_ONE_LINE = f'{CO["street"]}, {CO["district"]} / {CO["city"]}'
 MAPS_Q = "Yüksel İş Merkezi, Şair Haşmet Sk. No:27, Mimar Kemalettin, Fatih, İstanbul"
