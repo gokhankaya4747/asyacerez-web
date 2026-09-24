@@ -18,8 +18,6 @@ PLAN=[
 ("pUa1On18Jno","karisik-kuruyemis-1",1600,1.0),("PHIJC0jpx9U","karisik-kuruyemis-2",1400,1.0),
 ("Yx1XkPYUBss","rio-minas-1",1600,1.0),("j_Db7wOW5ik","rio-minas-2",1400,1.0),("9LqctKiRP5c","rio-minas-3",1400,1.0),
 ("IJyQ1us6MVM","santos-1",1600,1.0),("SoMHwovUDqA","santos-2",1400,1.0),("vJ3KldG86Eo","santos-3",1400,1.0),
-("SNOgbTWUjK8","kavrulmus-kahve-1",1600,1.0),("yHiljmYZrck","kavrulmus-kahve-2",1400,1.0),("REqK8jIAtv8","kavrulmus-kahve-3",1400,1.0),
-("obV_LM0KjxY","kahve-kategori",1600,1.0),
 # site imagery
 ("tDKsvBRFFKc","hero",2400,None),("pUa1On18Jno","hero-mix",2400,None),("jOqJbvo1P9g","ship",2000,None),
 ("1cqIcrWFQBI","ship-aerial",2000,None),("tjX_sniNzgQ","containers",1600,None),("oBcWSFDYo-0","market",1800,None),

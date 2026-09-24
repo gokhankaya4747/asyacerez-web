@@ -340,12 +340,12 @@ def page_home(lang):
     featured = [p for p in PRODUCTS if p["featured"]]
     cards = "".join(product_card(p, lang) for p in featured)
     marquee_items = "".join(f'<span>{e(p["name"][lang])}</span><i>✦</i>' for p in PRODUCTS)
-    cat_imgs = {"kuruyemis": "findik-1", "cekirdek": "ay-cekirdegi-1", "kurumeyve": "kuru-kayisi-1", "kahve": "kahve-kategori"}
+    cat_imgs = {"kuruyemis": "findik-1", "cekirdek": "ay-cekirdegi-1", "kurumeyve": "kuru-kayisi-1", "kahve": "santos-2"}
     cat_desc = {
         "kuruyemis": ("Ceviz, badem, fındık, Antep fıstığı, kaju ve yer fıstığı", "Walnuts, almonds, hazelnuts, pistachios, cashews and peanuts"),
         "cekirdek": ("Ay çekirdeği, kabak çekirdeği ve Çorum leblebisi", "Sunflower seeds, pumpkin seeds and Çorum leblebi"),
         "kurumeyve": ("Malatya kayısısı, Aydın inciri, Sultana üzüm ve hurma", "Malatya apricots, Aydın figs, Sultana raisins and dates"),
-        "kahve": ("Brezilya yeşil arabica çekirdeği ve kavrulmuş kahve", "Brazilian green arabica beans and roasted coffee"),
+        "kahve": ("Brezilya menşeli yeşil arabica kahve çekirdeği", "Brazilian green arabica coffee beans"),
     }
     cats = ""
     for ck, cv in CATEGORIES.items():
