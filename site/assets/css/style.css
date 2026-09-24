@@ -86,10 +86,10 @@ em{font-style:italic;color:var(--gold)}
 .has-mega:hover>a .ico,.has-mega:focus-within>a .ico{transform:rotate(180deg)}
 .mega{position:absolute;top:100%;left:50%;transform:translate(-50%,10px);padding-top:14px;opacity:0;visibility:hidden;transition:opacity .3s,transform .35s var(--ease),visibility .3s}
 .has-mega:hover .mega,.has-mega:focus-within .mega{opacity:1;visibility:visible;transform:translate(-50%,0)}
-.mega__inner{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr)) 210px;gap:28px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);width:max-content}
+.mega__inner{display:grid;grid-template-columns:repeat(4,minmax(138px,1fr)) 190px;gap:28px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);width:max-content}
 .mega__title{font-family:var(--serif);font-size:1rem;color:var(--brown);margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 .mega ul{list-style:none;margin:0;padding:0}
-.mega li a{display:block;padding:5px 0;font-size:.88rem;color:var(--muted);transition:color .2s,transform .3s var(--ease)}
+.mega li a{display:block;padding:5px 0;font-size:.85rem;color:var(--muted);transition:color .2s,transform .3s var(--ease)}
 .mega li a:hover{color:var(--gold-600);transform:translateX(4px)}
 .mega__feature{position:relative;border-radius:var(--radius-sm);overflow:hidden;display:block;min-height:190px}
 .mega__feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
@@ -200,7 +200,7 @@ body.menu-open .is-transparent .burger span{background:var(--brown)}
 .pcard:hover .pcard__more{gap:14px;color:var(--gold-600)}
 
 /* categories */
-.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
 .cat{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:3/3.7;display:block;color:var(--cream);isolation:isolate}
 .cat img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s var(--ease)}
 .cat::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(36,20,8,.05) 30%,rgba(36,20,8,.92));transition:background .5s}

@@ -60,6 +60,13 @@ def url(key, lang):
 
 e = html.escape
 
+def bidi(v, lang):
+    """Arapça sayfada saf Latin/rakam değerleri LRM ile sarmalar (aralıklar ters görünmesin)."""
+    import re as _re
+    if lang == "ar" and v and not _re.search(r'[\u0600-\u06FF]', v):
+        return "\u200e" + v + "\u200e"
+    return v
+
 # ---------------------------------------------------------------- arayüz metinleri
 T = {
  "tr": {
@@ -333,11 +340,12 @@ def page_home(lang):
     featured = [p for p in PRODUCTS if p["featured"]]
     cards = "".join(product_card(p, lang) for p in featured)
     marquee_items = "".join(f'<span>{e(p["name"][lang])}</span><i>✦</i>' for p in PRODUCTS)
-    cat_imgs = {"kuruyemis": "findik-1", "cekirdek": "ay-cekirdegi-1", "kurumeyve": "kuru-kayisi-1"}
+    cat_imgs = {"kuruyemis": "findik-1", "cekirdek": "ay-cekirdegi-1", "kurumeyve": "kuru-kayisi-1", "kahve": "kahve-kategori"}
     cat_desc = {
         "kuruyemis": ("Ceviz, badem, fındık, Antep fıstığı, kaju ve yer fıstığı", "Walnuts, almonds, hazelnuts, pistachios, cashews and peanuts"),
         "cekirdek": ("Ay çekirdeği, kabak çekirdeği ve Çorum leblebisi", "Sunflower seeds, pumpkin seeds and Çorum leblebi"),
         "kurumeyve": ("Malatya kayısısı, Aydın inciri, Sultana üzüm ve hurma", "Malatya apricots, Aydın figs, Sultana raisins and dates"),
+        "kahve": ("Brezilya yeşil arabica çekirdeği ve kavrulmuş kahve", "Brazilian green arabica beans and roasted coffee"),
     }
     cats = ""
     for ck, cv in CATEGORIES.items():
@@ -560,24 +568,26 @@ def page_product(p, lang):
         ("Kalibre / Sınıf" if tr else "Grades / Sizes", S["grades"][lang]),
         ("Nem" if tr else "Moisture", S["moisture"][lang]),
         ("Raf ömrü" if tr else "Shelf life", S["shelf"][lang]),
-        ("GTİP / HS Kodu" if tr else "HS Code", S["hs"]),
+        ("GTİP / HS Kodu" if tr else "HS Code", S["hs"][lang]),
         ("Satış şekli" if tr else "Sales terms", "Yalnızca toptan · palet, parsiyel veya konteyner (20’ / 40’)" if tr else "Wholesale only · pallet, LCL or container (20’ / 40’)"),
     ]
-    specs = "".join(f"<tr><th>{a}</th><td>{e(b)}</td></tr>" for a, b in spec_rows)
+    specs = "".join(f"<tr><th>{a}</th><td>{e(bidi(b, lang))}</td></tr>" for a, b in spec_rows)
     details = "".join(f"<li>{icon('check', 18)}<span>{e(x)}</span></li>" for x in p["details"][lang])
     nut = ""
     if p["nutrition"]:
         k, pr, fa, ca, fi = p["nutrition"]
         fmt = (lambda v: f"{v:.1f}".replace(".", ",")) if tr else (lambda v: f"{v:.1f}")
-        rows = [("Enerji" if tr else "Energy", f"{k} kcal", min(k / 700, 1)), ("Protein", f"{fmt(pr)} g", pr / 35),
-                ("Yağ" if tr else "Fat", f"{fmt(fa)} g", fa / 70), ("Karbonhidrat" if tr else "Carbohydrate", f"{fmt(ca)} g", ca / 85),
-                ("Lif" if tr else "Fibre", f"{fmt(fi)} g", fi / 16)]
+        kcal, gram = ("سعرة", "غ") if lang == "ar" else ("kcal", "g")
+        rows = [("Enerji" if tr else "Energy", f"{k} {kcal}", min(k / 700, 1)), ("Protein", f"{fmt(pr)} {gram}", pr / 35),
+                ("Yağ" if tr else "Fat", f"{fmt(fa)} {gram}", fa / 70), ("Karbonhidrat" if tr else "Carbohydrate", f"{fmt(ca)} {gram}", ca / 85),
+                ("Lif" if tr else "Fibre", f"{fmt(fi)} {gram}", fi / 16)]
         bars = "".join(f'<div class="nut__row"><span>{a}</span><span class="nut__bar"><i style="--w:{min(w,1)*100:.0f}%"></i></span><strong>{b}</strong></div>' for a, b, w in rows)
         nut = f"""<div class="panel" id="tab-nut" role="tabpanel" hidden>
           <p class="muted">{'100 g için yaklaşık besin değerleri (çiğ ürün). Değerler çeşide ve partiye göre değişebilir.' if tr else 'Approximate nutrition per 100 g (raw product). Values vary by variety and lot.'}</p>
           <div class="nut">{bars}</div></div>"""
     else:
-        nut = f"""<div class="panel" id="tab-nut" role="tabpanel" hidden><p class="muted">{'Besin değerleri karışımın içeriğine göre değişir; ürün şartnamesiyle birlikte paylaşılır.' if tr else 'Nutrition depends on the blend and is shared with the product specification.'}</p></div>"""
+        note = p.get("nutrition_note", {}).get(lang) or ('Besin değerleri karışımın içeriğine göre değişir; ürün şartnamesiyle birlikte paylaşılır.' if tr else 'Nutrition depends on the blend and is shared with the product specification.')
+        nut = f"""<div class="panel" id="tab-nut" role="tabpanel" hidden><p class="muted">{e(note)}</p></div>"""
     storage = (["Serin (0–10 °C), kuru (bağıl nem < %65) ve karanlık ortamda saklanmalıdır.",
                 "Güçlü koku yayan ürünlerden uzak, zeminle temas etmeyecek şekilde paletlerde depolanmalıdır.",
                 "Açılan ambalajlar hava almayacak şekilde kapatılmalıdır.",
@@ -623,8 +633,8 @@ def page_product(p, lang):
         <p class="pd__lead">{e(p['intro'][lang])}</p>
         <div class="pd__quick">
           <div>{icon('globe', 20)}<span><small>{'Menşe' if tr else 'Origin'}</small>{e(S['origin'][lang].split(',')[0].split('(')[0].strip())}{' +' if ',' in S['origin'][lang] else ''}</span></div>
-          <div>{icon('tag', 20)}<span><small>GTİP / HS</small>{S['hs'].split(' ')[0]}</span></div>
-          <div>{icon('clock', 20)}<span><small>{'Raf ömrü' if tr else 'Shelf life'}</small>{e(S['shelf'][lang].split('·')[0].replace('Uygun koşullarda ','').replace(' under proper storage','').replace('Natürel: ','').replace('Natural: ','').strip())}</span></div>
+          <div>{icon('tag', 20)}<span><small>GTİP / HS</small>{S['hs'][lang].split(' ')[0]}</span></div>
+          <div>{icon('clock', 20)}<span><small>{'Raf ömrü' if tr else 'Shelf life'}</small>{e(bidi(S['shelf'][lang].split('·')[0].replace('Uygun koşullarda ','').replace(' under proper storage','').replace('Natürel: ','').replace('Natural: ','').strip(), lang))}</span></div>
         </div>
         <div class="btn-row">
           <a class="btn btn--gold" href="{url('contact', lang)}?urun={p['slug']}">{t['request_quote']} {icon('arrow', 18)}</a>
